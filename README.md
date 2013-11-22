@@ -31,32 +31,37 @@ canvasToPixels({
 ```
 
 ## Documentation
+`canvas-to-pixels` returns `canvasToPixels` as its `module.exports`
 
-For `POST` requests, we expect a JSON body that has been run through `escapeURIComponent` (see [Getting Started][] for example). The request can have the following parameters
+### `canvasToPixels(options, cb)`
+Run JavaScript function against canvas receive call back with [`PixelArray`][]
 
-[Getting Started]: #getting-started
+- options `Object`
+    - width `Number` - Width of canvas and output image
+    - height `Number` - Height of canvas and output image
+    - js `Object` - Container for commands to run against a `canvas` instance
+        - This can be prepared by passing a function to [function-to-string][]
+        - The function itself should have a signature of `function (canvas, cb) {}`
+        - params `String[]` - Array of parameter names for a function
+          - The first parameter will be a `canvas` instance with the provided `width` and `height`
+        - body `String` - Body of the function to execute
+          - This must callback when it is completed (second parameter)
+          - It is expected that `js.body` will write out the content you want to the canvas
+- cb `Function` - Error-first callback that will receive [`PixelArray`][]
+    - Function signature should be `function (err, pixels) {}`
+    - err `Error` - An error if any occurred while generating pixels
+    - pixels [`PixelArray`][] - An `rgba` array of pixels values from the canvas
+        - [`PixelArrays`][`PixelArray`] behave just like normal arrays except they lack methods like `concat`
+        - An `rgba` array is an array that contains subsequences of length 4 representing the `red`, `green`, `blue`, and `alpha` values for a pixel.
+            - For example, `[0, 1, 2, 3, 4, 5, 6, 7]` is 2 pixels with `r: 0, g: 1, b: 2, a: 3` and `r: 4, g: 5, b: 6, a: 7`
+            - Each value can range from `0` to `255`
+        - If you would like to coerce `pixels` into a normal array, run
 
-- width `Number` - Width of canvas and output image
-- height `Number` - Height of canvas and output image
-- js `Object` - Container for commands to run against a `canvas` instance
-    - This can be prepared by passing a function to [function-to-string][]
-    - The function itself should have a signature of `function (canvas, cb) {}`
-    - params `String[]` - Array of parameter names for a function
-      - The first parameter will be a `canvas` instance with the provided `width` and `height`
-    - body `String` - Body of the function to execute
-      - This must callback when it is completed (second parameter)
-      - It is expected that `js.body` will write out the content you want to the canvas
-- responseType `String` - Optional flag to set response type.
-    - By default, the response will be an `rgba` array of pixels.
-        - For example, `[0, 1, 2, 3, 4, 5, 6, 7]` is 2 pixels with `r: 0, g: 1, b: 2, a: 3` and `r: 4, g: 5, b: 6, a: 7`
-    - If `responseType` is `'string'`, the response will be a string where each character represents a pixel value
-        - For example, `abcd` is `[97, 98, 99, 100]`
-        - These values can be extracted via [charCodeAt][]. [Another example is in the tests][].
-        - This is practical for reducing padding and using a more efficient parsing technique.
+```js
+var normalArray = Array.prototype.slice.call(pixels);
+```
 
-[function-to-string]: https://github.com/twolfson/function-to-string
-[charCodeAt]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/charCodeAt
-[Another example is in the tests]: https://github.com/twolfson/phantomjs-pixel-server/blob/12d06b5f7c90fa4848dbe4c749180d6b0d726854/test/phantomjs-pixel-server_test.js#L117-L123
+[`PixelArray`]: https://developer.mozilla.org/en-US/docs/Web/API/CanvasPixelArray
 
 ## Donating
 Support this project and [others by twolfson][gittip] via [gittip][].
