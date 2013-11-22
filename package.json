@@ -1,7 +1,7 @@
 {
   "name": "canvas-to-pixels",
   "description": "Convert canvas actions into pixels",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "homepage": "https://github.com/twolfson/canvas-to-pixels",
   "author": {
     "name": "Todd Wolfson",
