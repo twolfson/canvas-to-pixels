@@ -13,13 +13,19 @@ function drawCheckerboard(canvas, cb) {
   cb();
 }
 
-function runCommand(done) {
-
+function runCanvasToPixels(params) {
+  before(function (done) {
+    var that = this;
+    canvasToPixels(params, function (err, pixels) {
+      that.actualPixels = pixels;
+      done(err);
+    });
+  });
 }
 
 describe('canvas-to-pixels', function () {
   describe('given a set of commands on a canvas', function () {
-    makeRequest({
+    runCanvasToPixels({
       width: 10,
       height: 10,
       js: drawCheckerboard
