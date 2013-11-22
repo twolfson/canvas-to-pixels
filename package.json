@@ -1,0 +1,57 @@
+{
+  "name": "phantomjs-pixel-server",
+  "description": "PhantomJS server that converts canvas actions into pixels",
+  "version": "0.1.0",
+  "homepage": "https://github.com/twolfson/phantomjs-pixel-server",
+  "author": {
+    "name": "Todd Wolfson",
+    "email": "todd@twolfson.com",
+    "url": "http://twolfson.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/twolfson/phantomjs-pixel-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/twolfson/phantomjs-pixel-server/issues"
+  },
+  "licenses": [
+    {
+      "type": "UNLICENSE",
+      "url": "https://github.com/twolfson/phantomjs-pixel-server/blob/master/UNLICENSE"
+    }
+  ],
+  "bin": {
+    "phantomjs-pixel-server": "bin/phantomjs-pixel-server"
+  },
+  "main": "lib/phantomjs-pixel-server",
+  "scripts": {
+    "build-commander": "mkdir -p lib/vendor && browserify --standalone commander --entry node_modules/commander/index.js --transform phantomjsify --external system --outfile lib/vendor/commander.js",
+    "test": "mocha"
+  },
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": "~1.11.0",
+    "grunt": "~0.4.1",
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-contrib-watch": "~0.4.0",
+    "browserify": "~2.35.2",
+    "commander": "~2.0.0",
+    "phantomjsify": "~0.1.0",
+    "request": "~2.27.0",
+    "get-pixels": "~1.0.1",
+    "save-pixels": "~0.3.0",
+    "ndarray": "~1.0.8",
+    "function-signature": "~0.2.0",
+    "function-to-string": "~0.2.0"
+  },
+  "keywords": [
+    "phantomjs",
+    "pixel",
+    "canvas",
+    "server"
+  ]
+}
