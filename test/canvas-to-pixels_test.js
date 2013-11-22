@@ -34,7 +34,7 @@ describe('canvas-to-pixels', function () {
     imageUtils.loadExpected('checkerboard.png');
 
     it('returns an array of pixel values', function () {
-      assert.deepEqual(this.actualPixels, [].slice.call(this.expectedPixels.data));
+      assert.deepEqual([].slice.call(this.actualPixels), [].slice.call(this.expectedPixels.data));
     });
   });
 

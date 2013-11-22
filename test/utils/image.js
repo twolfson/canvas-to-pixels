@@ -6,8 +6,8 @@ var savePixels = require('save-pixels');
 exports.loadExpected = function (filename) {
   before(function (done) {
     var that = this;
-    getPixels(__dirname + '/expected-files/' + filename, function (err, pixels) {
-      that.pixels = pixels;
+    getPixels(__dirname + '/../expected-files/' + filename, function (err, expectedPixels) {
+      that.expectedPixels = expectedPixels;
       done(err);
     });
   });
@@ -16,10 +16,9 @@ exports.loadExpected = function (filename) {
 exports.debug = function (filename) {
   if (process.env.DEBUG_TEST) {
     before(function (done) {
-      console.log(this.actualPixels);
-      var png = savePixels(ndarray(this.actualPixels, [10, 10, 4], [4 * 10, 4, 1], 0), 'png');
-      try { fs.mkdirSync(__dirname + '/actual-files'); } catch (e) {}
-      png.pipe(fs.createWriteStream(__dirname + '/actual-files/' + filename));
+      var png = savePixels(ndarray([].slice.call(this.actualPixels), [10, 10, 4], [4 * 10, 4, 1], 0), 'png');
+      try { fs.mkdirSync(__dirname + '/../actual-files'); } catch (e) {}
+      png.pipe(fs.createWriteStream(__dirname + '/../actual-files/' + filename));
       png.on('end', done);
     });
   }
