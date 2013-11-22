@@ -12,6 +12,8 @@ This is part of the [gifsockets][] project. It is an alternative engine to the d
 
 **Documentation here: https://github.com/LearnBoost/node-canvas/wiki**
 
+[node-canvas]: https://github.com/LearnBoost/node-canvas
+
 Install the module with: `npm install canvas-to-pixels`
 
 ```js
