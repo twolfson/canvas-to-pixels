@@ -1,96 +1,36 @@
-# phantomjs-pixel-server [![Build status](https://travis-ci.org/twolfson/phantomjs-pixel-server.png?branch=master)](https://travis-ci.org/twolfson/phantomjs-pixel-server)
+# canvas-to-pixels [![Build status](https://travis-ci.org/twolfson/canvas-to-pixels.png?branch=master)](https://travis-ci.org/twolfson/canvas-to-pixels)
 
-[PhantomJS][] server that converts canvas actions into pixels
+Convert canvas actions into pixels
 
-This is part of the [gifsockets][] project.
+This is part of the [gifsockets][] project. It is an alternative engine to the default [phantomjs-pixel-server][].
 
-[PhantomJS]: http://phantomjs.org/
 [gifsockets]: https://github.com/twolfson/gifsockets-server
+[phantomjs-pixel-server]: https://github.com/twolfson/phantomjs-pixel-server
 
 ## Getting Started
-Install the module with: `npm install -g phantomjs-pixel-server`
+**This module depends on [node-canvas][]. Please satisfy its dependencies before using.**
 
-Start a server and get some pixels:
+**Documentation here: https://github.com/LearnBoost/node-canvas/wiki**
 
-```bash
-bin/phantomjs-pixel-server &
-# PhantomJS server is running at http://127.0.0.1:9090/
-curl http://127.0.0.1:9090/ -X POST --data \
-'{"width":10,"height":10,"js":{"params":["canvas","cb"], '\
-'"body":"var context = canvas.getContext(\"2d\"); '\
-'context.fillStyle = \"#BADA55\"; context.fillRect(0, 0, 10, 10); cb();"}}'
-# [186,218,85,255,186,218, ..., 255]
-```
-
-With [request][], that would look like:
-
-[request]: https://github.com/mikeal/request
+Install the module with: `npm install canvas-to-pixels`
 
 ```js
-// We use JSON as our body and must serialize it in this maner
-var arg = JSON.stringify({
+var canvasToPixels = require('canvas-to-pixels');
+canvasToPixels({
   width: 10,
   height: 10,
-  js: {
-    params: ["canvas", "cb"],
-    body: [
-      'var context = canvas.getContext(\'2d\');'
-      'context.fillStyle = \'#BADA55\';',
-      'context.fillRect(0, 0, 10, 10);',
-      'cb();'
-    ].join('')
+  js: (canvas, cb) {
+    var context = canvas.getContext('2d');
+    context.fillStyle = '#BADA55';
+    context.fillRect(0, 0, 10, 10);
+    cb();
   }
-});
-var encodedArg = encodeURIComponent(arg);
-
-// Request to our server
-request({
-  url: 'http://localhost:9090/',
-  method: 'POST',
-  headers: {
-    // PhantomJS looks for Proper-Case headers, request is lower-case
-    // This means you *must* supply this header
-    'Content-Length': encodedArg.length
-  },
-  body: encodedArg,
-}, function handlePhantomResponse (err, res, body) {
-  // body is "[186,218,85,255,186,218, ..., 255]"
+}, function receivePixels (err, pixels) {
+  // pixels is [186,218,85,255,186,218, ..., 255]
 });
 ```
 
 ## Documentation
-### CLI
-The CLI command for `phantomjs-pixel-server` is a `node` wrapper which invokes a [PhantomJS][] script. The script path is resolved by `node's` `require` function.
-
-```js
-// Resolve locally installed server path
-// '/home/todd/github/phantomjs-pixel-server/lib/phantomjs-pixel-server.js'
-require.resolve('phantomjs-pixel-server');
-```
-
-Inside the server, we use [commander][] to accept different parameters for the server. Currently, we only support `port`.
-
-[commander]: https://github.com/visionmedia/commander.js
-
-```bash
-$ phantomjs-pixel-server --help
-
-  Usage: phantomjs-pixel-server.js [options]
-
-  Options:
-
-    -h, --help         output usage information
-    -V, --version      output the version number
-    -p, --port <port>  Port to run the server on
-```
-
-### HTTP interface
-`phantomjs-pixel-server` will reply with `200s` to any non-`POST` request (e.g. `GET`). This is a nice way to know when the server has started.
-
-```bash
-curl http://127.0.0.1:9090/
-# IT'S ALIVE!
-```
 
 For `POST` requests, we expect a JSON body that has been run through `escapeURIComponent` (see [Getting Started][] for example). The request can have the following parameters
 
