@@ -3,5 +3,14 @@ node_js:
   - "0.10"
   - "0.8"
 
+install:
+  # Install cairo
+  # https://github.com/LearnBoost/node-canvas/wiki/Installation---Ubuntu#installing-dependencies
+  - sudo apt-get update
+  - sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
+
+  # Install node modules
+  - npm install
+
 notifications:
   email: false
