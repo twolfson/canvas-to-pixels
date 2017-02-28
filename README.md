@@ -21,7 +21,7 @@ var canvasToPixels = require('canvas-to-pixels');
 canvasToPixels({
   width: 10,
   height: 10,
-  js: (canvas, cb) {
+  js: function (canvas, cb) {
     var context = canvas.getContext('2d');
     context.fillStyle = '#BADA55';
     context.fillRect(0, 0, 10, 10);
@@ -41,14 +41,12 @@ Run JavaScript function against canvas receive call back with [`PixelArray`][]
 - options `Object`
     - width `Number` - Width of canvas and output image
     - height `Number` - Height of canvas and output image
-    - js `Object` - Container for commands to run against a `canvas` instance
-        - This can be prepared by passing a function to [function-to-string][]
+    - js `Function` - Commands to run against a `canvas` instance
         - The function itself should have a signature of `function (canvas, cb) {}`
-        - params `String[]` - Array of parameter names for a function
-          - The first parameter will be a `canvas` instance with the provided `width` and `height`
-        - body `String` - Body of the function to execute
-          - This must callback when it is completed (second parameter)
-          - It is expected that `js.body` will write out the content you want to the canvas
+        - canvas `Object` - Canvas object to mutate
+            - The first parameter will be a `canvas` instance with the provided `width` and `height`
+        - cb `Function` - Error-first callback to signal completion of mutations
+            - If there was an error inside of `js`, please callback with `cb(err);`
 - cb `Function` - Error-first callback that will receive [`PixelArray`][]
     - Function signature should be `function (err, pixels) {}`
     - err `Error` - An error if any occurred while generating pixels
